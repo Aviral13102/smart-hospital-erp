@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Placeholder for AWS Cognito Issuer URI
+          # Format: https://cognito-idp.{region}.amazonaws.com/{userPoolId}
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_example
+          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_example/.well-known/jwks.json
+
+logging:
+  level:
+    org.springframework.security: DEBUG
