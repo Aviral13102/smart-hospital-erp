@@ -86,6 +86,11 @@ class ApiClient {
                 `${API_BASE_URL}/api/auth/public/login`,
                 { method: 'POST', body: JSON.stringify({ email, password }) }
             ),
+        signup: (data: { email: string; password: string; firstName: string; lastName: string; role: string; department: string }) =>
+            this.request<{ message: string; email: string; employeeId: string }>(
+                `${API_BASE_URL}/api/auth/public/signup`,
+                { method: 'POST', body: JSON.stringify(data) }
+            ),
         getProfile: () =>
             this.request(`${API_BASE_URL}/api/auth/user/profile`),
         logout: () =>

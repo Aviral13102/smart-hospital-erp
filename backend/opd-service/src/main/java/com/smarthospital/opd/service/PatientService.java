@@ -2,7 +2,7 @@ package com.smarthospital.opd.service;
 
 import com.smarthospital.opd.entity.Patient;
 import com.smarthospital.opd.repository.PatientRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +11,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class PatientService {
 
     private final PatientRepository patientRepository;
+
+    @Autowired
+    public PatientService(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
+    }
 
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();

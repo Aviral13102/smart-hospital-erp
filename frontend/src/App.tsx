@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Login } from './modules/auth/Login';
+import { Signup } from './modules/auth/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { OpdDashboard } from './modules/opd/OpdDashboard';
 import { IcuDashboard } from './modules/icu/IcuDashboard';
@@ -16,6 +17,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/opd" element={<OpdDashboard />} />
             <Route path="/icu" element={<IcuDashboard />} />

@@ -1,12 +1,11 @@
 package com.smarthospital.opd.service;
 
 import com.smarthospital.opd.entity.Appointment;
-import com.smarthospital.opd.entity.Patient;
 import com.smarthospital.opd.entity.QueueEntry;
 import com.smarthospital.opd.repository.AppointmentRepository;
 import com.smarthospital.opd.repository.PatientRepository;
 import com.smarthospital.opd.repository.QueueEntryRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +14,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final QueueEntryRepository queueEntryRepository;
+
+    @Autowired
+    public AppointmentService(AppointmentRepository appointmentRepository,
+            PatientRepository patientRepository,
+            QueueEntryRepository queueEntryRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.queueEntryRepository = queueEntryRepository;
+    }
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -32,7 +39,7 @@ public class AppointmentService {
     }
 
     public List<Appointment> getAppointmentsByPatient(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+        return appointmentRepository.findByPatient_Id(patientId);
     }
 
     public List<Appointment> getAppointmentsByDoctor(String doctorId) {
@@ -73,14 +80,13 @@ public class AppointmentService {
     private void addToQueue(Appointment appointment) {
         Integer maxQueue = queueEntryRepository.findMaxQueueNumberForToday(appointment.getDepartment());
 
-        QueueEntry queueEntry = QueueEntry.builder()
-                .appointment(appointment)
-                .department(appointment.getDepartment())
-                .doctorId(appointment.getDoctorId())
-                .queueNumber(maxQueue + 1)
-                .status(QueueEntry.QueueStatus.WAITING)
-                .priority(QueueEntry.Priority.NORMAL)
-                .build();
+        QueueEntry queueEntry = new QueueEntry();
+        queueEntry.setAppointment(appointment);
+        queueEntry.setDepartment(appointment.getDepartment());
+        queueEntry.setDoctorId(appointment.getDoctorId());
+        queueEntry.setQueueNumber(maxQueue + 1);
+        queueEntry.setStatus(QueueEntry.QueueStatus.WAITING);
+        queueEntry.setPriority(QueueEntry.Priority.NORMAL);
 
         queueEntryRepository.save(queueEntry);
 

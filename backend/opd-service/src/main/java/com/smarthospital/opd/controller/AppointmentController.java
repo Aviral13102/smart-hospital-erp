@@ -1,8 +1,10 @@
 package com.smarthospital.opd.controller;
 
+import com.smarthospital.opd.dto.AppointmentRequest;
 import com.smarthospital.opd.entity.Appointment;
 import com.smarthospital.opd.service.AppointmentService;
-import lombok.RequiredArgsConstructor;
+import com.smarthospital.opd.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/opd/appointments")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final PatientService patientService;
+
+    @Autowired
+    public AppointmentController(AppointmentService appointmentService, PatientService patientService) {
+        this.appointmentService = appointmentService;
+        this.patientService = patientService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Appointment>> getAllAppointments() {
@@ -54,9 +62,22 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
-        Appointment created = appointmentService.createAppointment(appointment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<?> createAppointment(@RequestBody AppointmentRequest request) {
+        // Find the patient
+        return patientService.getPatientById(request.getPatientId())
+                .map(patient -> {
+                    Appointment appointment = new Appointment();
+                    appointment.setPatient(patient);
+                    appointment.setDoctorId(request.getDoctorId());
+                    appointment.setDoctorName(request.getDoctorName());
+                    appointment.setDepartment(request.getDepartment());
+                    appointment.setScheduledTime(request.getScheduledTime());
+                    appointment.setReason(request.getReason());
+
+                    Appointment created = appointmentService.createAppointment(appointment);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+                })
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PostMapping("/{id}/check-in")

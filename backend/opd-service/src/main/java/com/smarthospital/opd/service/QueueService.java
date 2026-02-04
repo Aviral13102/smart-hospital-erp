@@ -2,20 +2,23 @@ package com.smarthospital.opd.service;
 
 import com.smarthospital.opd.entity.QueueEntry;
 import com.smarthospital.opd.repository.QueueEntryRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class QueueService {
 
     private final QueueEntryRepository queueEntryRepository;
+
+    @Autowired
+    public QueueService(QueueEntryRepository queueEntryRepository) {
+        this.queueEntryRepository = queueEntryRepository;
+    }
 
     public List<QueueEntry> getQueueByDepartment(String department) {
         return queueEntryRepository.findActiveQueueByDepartment(department);

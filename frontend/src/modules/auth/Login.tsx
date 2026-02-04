@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Activity, Mail, Lock, Sun, Moon, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -28,7 +28,7 @@ export function Login() {
     try {
       await login(email, password);
     } catch {
-      setError('Invalid credentials. Use admin@hospital.com / demo123');
+      setError('Invalid email or password. Please check your credentials.');
     }
   };
 
@@ -184,7 +184,7 @@ export function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@hospital.com"
+                  placeholder="your.email@hospital.com"
                   style={{
                     width: '100%',
                     paddingLeft: '48px',
@@ -293,18 +293,20 @@ export function Login() {
             </button>
           </form>
 
-          {/* Demo Hint */}
-          <div
-            style={{
-              marginTop: '24px',
-              padding: '16px',
-              borderRadius: '8px',
-              backgroundColor: 'var(--color-info-bg)',
-              border: '1px solid var(--color-info)'
-            }}
-          >
-            <p style={{ fontSize: '14px', color: 'var(--color-info)', margin: 0 }}>
-              <strong>Demo:</strong> Use <code style={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px' }}>admin@hospital.com</code> / <code style={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px' }}>demo123</code>
+          {/* Signup Link */}
+          <div style={{ textAlign: 'center', marginTop: '24px' }}>
+            <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
+              Don't have an account?{' '}
+              <Link
+                to="/signup"
+                style={{
+                  color: 'var(--color-primary)',
+                  textDecoration: 'none',
+                  fontWeight: 500
+                }}
+              >
+                Create Account
+              </Link>
             </p>
           </div>
         </div>

@@ -2,7 +2,7 @@ package com.smarthospital.opd.controller;
 
 import com.smarthospital.opd.entity.QueueEntry;
 import com.smarthospital.opd.service.QueueService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +11,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/opd/queue")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class QueueController {
 
     private final QueueService queueService;
+
+    @Autowired
+    public QueueController(QueueService queueService) {
+        this.queueService = queueService;
+    }
 
     @GetMapping("/department/{department}")
     public ResponseEntity<List<QueueEntry>> getQueueByDepartment(@PathVariable String department) {
